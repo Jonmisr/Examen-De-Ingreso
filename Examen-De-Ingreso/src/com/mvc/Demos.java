@@ -62,17 +62,23 @@ public class Demos {
 			} 
 		};
 
+		//Al Iniciar El Programa, Hay Varias Veces Que El JFrame No Cargar Bien Y Tira Un NullPointerException
+		//El Scanner Es Para Que Se Cargue La Imagen Asi Corre Sin Problemas
 		System.out.println("Ingrese La Cantidad De Anios A Predecir:");
 		int anios = scanner.nextInt();
 		
+		//Recorro Los Dias En Base A La Cantidad De Anios Que Quiero Que Pasen
 		for (int dias = 0; dias < (365 * anios); dias++) {
 
 			ferengi.setTiempoMovimiento();
 			beta.setTiempoMovimiento();
 			vulcano.setTiempoMovimiento();
+			
+			//Algoritmos Condiciones
 			sol.sucesoPeriodoDeSequia();
 			sol.sucesoPeriodoDeLluvia(dias);
 			sol.sucesoPeriodoOptimo();
+			
 			ventanaMovimiento.repaint();
 			
 			try {

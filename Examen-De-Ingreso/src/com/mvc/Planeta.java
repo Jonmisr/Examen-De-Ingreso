@@ -11,6 +11,7 @@ public abstract class Planeta {
 
 	public Planeta(int radio) {
 		this.radio = radio;
+		//Angulo Con El Cual Inicia Posicionado El Planeta
 		this.É∆ = Math.toRadians(90);
 	}
 
@@ -42,6 +43,7 @@ public abstract class Planeta {
 		return É∆;
 	}
 
+	//Desplazamiento Del Angulo Al Trasladarse
 	protected void desplazarAngulo(double t) {
 		this.É∆ = 2 * Math.PI * t;
 	}
