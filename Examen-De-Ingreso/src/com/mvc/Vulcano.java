@@ -3,7 +3,7 @@ package com.mvc;
 public class Vulcano extends Planeta{
 
 	//Calculo De Las Revoluciones Por Dia En Base A La Velocidad Angular = 5 grado/dia
-	private static double RPD = 0.0873;//0.08726646;
+	private static double RPD = 0.08726646;
 	private long tiempoInicial;
 	private double tiempoTranscurrido;
 

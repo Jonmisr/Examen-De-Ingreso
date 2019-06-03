@@ -23,7 +23,7 @@ public class SistemaSolar {
 	private SistemaSolar() {
 		planetas = new ArrayList<>();
 		//Los FPS Son Para El JFrame
-		this.FPS = 30;
+		this.FPS = 60;
 		this.contadorSequias = 0;
 		this.contadorLluvias = 0;
 		this.contadorOptimo = 0;
@@ -204,10 +204,14 @@ public class SistemaSolar {
 			if (valorX > valorY) {
 				resultado = valorX - valorY;
 			} else {
-				resultado = valorY - valorX;
+				resultado = valorY - valorX;			
 			}
-			System.out.println("1-Resultado = " + resultado);
-			return resultado > 0 && resultado < 10;
+			double resultadoRedondeado = this.redondearDecimales(resultado, 4);
+			if(unPlaneta.getClass() == Ferengi.class) {
+			System.out.println("Resultado Ferengi = " + resultadoRedondeado);
+			}
+			else { System.out.println("Resultado Betasoide = " + resultadoRedondeado); }
+			return (resultadoRedondeado > 0 && resultadoRedondeado < 10);
 		}
 
 		return calculoY == calculoX;

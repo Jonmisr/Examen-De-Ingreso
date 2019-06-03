@@ -3,7 +3,7 @@ package com.mvc;
 public class Betasoide extends Planeta {
 
 	//Calculo De Las Revoluciones Por Dia En Base A La Velocidad Angular = 3 grado/dia
-	private static double RPD = 0.0524;//0.05235988;
+	private static double RPD = 0.05235988;
 	private long tiempoInicial;
 	private double tiempoTranscurrido;
 

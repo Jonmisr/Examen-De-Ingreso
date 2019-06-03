@@ -4,7 +4,7 @@ public class Ferengi extends Planeta {
 	
 	// Calculo De Las Revoluciones Por Dia En Base A La Velocidad Angular = 1
 	// grado/dia
-	private static double RPD = 0.0175;//0.01745329;
+	private static double RPD = 0.01745329;
 	private long tiempoInicial;
 	private double tiempoTranscurrido;
 

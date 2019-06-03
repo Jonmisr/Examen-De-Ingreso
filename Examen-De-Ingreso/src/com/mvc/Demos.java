@@ -29,13 +29,13 @@ public class Demos {
 			sol.getPlanetas().stream().forEach(planeta -> planeta.setMovimiento());			
 			
 			//Algoritmos Condiciones
-			//sol.sucesoPeriodoDeSequia(dias);
-			sol.sucesoSequia(dias);
+			sol.sucesoPeriodoDeSequia(dias);
+			//sol.sucesoSequia(dias);
 			//sol.sucesoPeriodoDeLluvia(dias);
 			//sol.sucesoPeriodoOptimo(dias);
 			
 			try {
-				Thread.sleep(1000 / sol.getFPS());
+				Thread.sleep(1000/ sol.getFPS());
 			} catch (Exception e) {
 			}
 		}
