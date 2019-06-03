@@ -1,55 +1,85 @@
 package com.mvc;
 
-import java.awt.Graphics;
-import java.awt.Point;
-
 public abstract class Planeta {
 
-	private int radio;
+	protected int radio;
 	protected SistemaSolar sol;
-	private double É∆;
+	protected double É∆;
+	protected double movimientoEnX;
+	protected double movimientoEnY;
 
 	public Planeta(int radio) {
 		this.radio = radio;
+		this.movimientoEnX = 0;
+		this.movimientoEnY = 0;
 		//Angulo Con El Cual Inicia Posicionado El Planeta
-		this.É∆ = Math.toRadians(90);
+		this.É∆ = Math.toDegrees(90);
 	}
-
-	public abstract Point trayectoria();
-
-	public abstract void dibujarRadio(Graphics g1);
-
-	public abstract void setMovimiento(Graphics g1);
 	
-	public abstract Point getMovimiento();
+	protected abstract void setMovimiento();
+	
+	protected abstract void setTiempoMovimiento();
 
-	public int getRadio() {
-		return radio;
+	protected void setAnguloInicial(int radio) {	
+		É∆ = Math.toDegrees(radio);
 	}
-
-	public void setAnguloInicial(int radio) {	
-		É∆ = Math.toRadians(radio);
-	}
-
-	public SistemaSolar getSol() {
+	
+	protected SistemaSolar getSol() {
 		return sol;
 	}
 
-	public void setSol(SistemaSolar sol) {
+	protected void setSol(SistemaSolar sol) {
 		this.sol = sol;
 	}
 
-	public double getAnguloInicial() {
+	protected double getAnguloInicial() {
 		return É∆;
 	}
 
 	//Desplazamiento Del Angulo Al Trasladarse
 	protected void desplazarAngulo(double t) {
-		this.É∆ = 2 * Math.PI * t;
+		double angulo = 2 * Math.PI * t;
+		this.É∆ = this.redondearDecimales(angulo, 4);
 	}
 
-	void PintarPunto(Point c, int r, Graphics g) {
-		g.fillOval(c.x - r / 2, c.y - r / 2, r, r);
+	protected int getRadio() {
+		return radio;
+	}
+	
+	protected double getMovimientoEnX() {
+		return movimientoEnX;
 	}
 
+	protected void setMovimientoEnX(double valorX) {
+		this.movimientoEnX = valorX;
+	}
+
+	protected double getMovimientoEnY() {
+		return movimientoEnY;
+	}
+
+	protected void setMovimientoEnY(double valorY) {
+		this.movimientoEnY = valorY;
+	}
+	
+	public double trayectoriaEnY() {
+		double radioY = getRadio() * Math.sin(getAnguloInicial()) + getSol().getCentroY();
+		return this.redondearDecimales(radioY, 4);
+	}
+	
+	public double trayectoriaEnX() {	
+			double radioX = getRadio() * Math.cos(getAnguloInicial()) + getSol().getCentroX();
+			return this.redondearDecimales(radioX, 4);
+	}
+	
+	public double redondearDecimales(double valorInicial, int numeroDecimales) {
+		double parteEntera, resultado;
+		resultado = valorInicial;
+		parteEntera = Math.floor(resultado);
+		resultado = (resultado - parteEntera) * Math.pow(10, numeroDecimales);
+		resultado = Math.round(resultado);
+		resultado = (resultado / Math.pow(10, numeroDecimales)) + parteEntera;
+		if (resultado < parteEntera) return Math.ceil(resultado);
+		return resultado;
+	}
 }
