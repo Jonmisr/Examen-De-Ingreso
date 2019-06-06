@@ -1,5 +1,7 @@
 package com.mvc;
 
+import java.math.BigDecimal;
+
 public class Ferengi extends Planeta {
 	
 	// Calculo De Las Revoluciones Por Dia En Base A La Velocidad Angular = 1
@@ -30,9 +32,7 @@ public class Ferengi extends Planeta {
 
 	public void setMovimiento() {
 		// Re-Defino Su Trayectoria Cada Vez Que Cambia Su Movimiento
-		double valorX = trayectoriaEnX();
-		setMovimientoEnX(valorX);
-		double valorY = trayectoriaEnY();
-		setMovimientoEnY(valorY);
+		setMovimientoEnX(trayectoriaEnX());
+		setMovimientoEnY(trayectoriaEnY());
 	}
 }

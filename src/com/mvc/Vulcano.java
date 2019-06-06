@@ -10,8 +10,6 @@ public class Vulcano extends Planeta{
 	public Vulcano() {
 		super(2000);
 		this.tiempoInicial = System.currentTimeMillis();
-		//Inicio El Planeta Con Su Respecto Radio En X e Y
-		//this.movimientoDibujoVulcano = new Point(2000, 2000);
 	}
 	
 	public long getTiempoInicial() {

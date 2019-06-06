@@ -1,50 +1,56 @@
 package com.mvc;
 
-import java.util.Scanner;
+import com.mvc.estrategiaImp.StrategyPeriodoLluvia;
+import com.mvc.estrategiaImp.StrategyPeriodoOptimo;
+import com.mvc.estrategiaImp.StrategyPeriodoSequia;
 
 public class Demos {
 
 	public static void main(String[] args) {
-
-		Scanner scanner = new Scanner(System.in);
 		
+		int totalDiasAnio = 365;
+		int anios = 10;
+		//Instancio Sistema Solar
 		SistemaSolar sol = SistemaSolar.getInstanceSistemaSolar();
+		//Instancio Planetas
 		Ferengi ferengi = new Ferengi();
 		Betasoide beta = new Betasoide();
 		Vulcano vulcano = new Vulcano();
-		
+		//Instancio Estrategias
+		StrategyPeriodoSequia sequia = new StrategyPeriodoSequia(sol);
+		StrategyPeriodoLluvia lluvia = new StrategyPeriodoLluvia(sol);
+		StrategyPeriodoOptimo optimo = new StrategyPeriodoOptimo(sol);
+		//Agrego Los Planetas Al Sol
 		sol.agregarPlaneta(ferengi);
 		sol.agregarPlaneta(beta);
 		sol.agregarPlaneta(vulcano);
-
-		//Al Iniciar El Programa, Hay Varias Veces Que El JFrame No Cargar Bien Y Tira Un NullPointerException
-		//El Scanner Es Para Que Se Cargue La Imagen Asi Corre Sin Problemas
-		System.out.println("Ingrese La Cantidad De Anios A Predecir:");
-		int anios = scanner.nextInt();
+		//Agrego Las Estrategias Al Sol
+		sol.agregarStrategy(sequia);
+		sol.agregarStrategy(lluvia);
+		sol.agregarStrategy(optimo);
 		
 		//Recorro Los Dias En Base A La Cantidad De Anios Que Quiero Que Pasen
-		for (int dias = 0; dias < (365 * anios); dias++) {
-
+		for(int i = 0; i < anios * totalDiasAnio; i++) {
+			
+			int dias = i;	
 			sol.getPlanetas().stream().forEach(planeta -> planeta.setTiempoMovimiento());
 			sol.getPlanetas().stream().forEach(planeta -> planeta.setMovimiento());			
 			
-			//Algoritmos Condiciones
-			sol.sucesoPeriodoDeSequia(dias);
-			sol.sucesoPeriodoDeLluvia(dias);
-			sol.sucesoPeriodoOptimo(dias);
-			
+			//Aplico Algoritmos Dentro De La Lista Que Tiene El Sol
+
+			sol.getCondicionesStrategy().stream().forEach(estrategia -> sol.aplicarCondiciones(estrategia, dias));
+	
 			try {
 				Thread.sleep(1000 / sol.getFPS());
 			} catch (Exception e) {
 			}
 		}
 		
-		scanner.close();
-		System.out.println("Cantidad Sucesos Sequias = " + sol.getContadorSequias());
-		for(Integer unDia : sol.getDiasOcurridosSequias()) { System.out.println(unDia);}
-		System.out.println("Cantidad Sucesos Lluvias = " + sol.getContadorLluvias());
-		System.out.println("Dia = " + sol.getMaximoDia() + " - Perimetro = " + sol.getMaximoPerimetro());
-		System.out.println("Cantidad Sucesos Optimos = " + sol.getContadorOptimo());
-		for(Integer unDia : sol.getDiasOcurridosOptimos()) { System.out.println(unDia);}
+		System.out.println("Cantidad Sucesos Sequias = " + sequia.getContadorSequias());
+		//for(Integer unDia : sequia.getDiasOcurridosSequias()) { System.out.println(unDia);}
+		System.out.println("Cantidad Sucesos Lluvias = " + lluvia.getContadorLluvias());
+		System.out.println("Dia = " + lluvia.getMaximoDia() + " - Perimetro = " + lluvia.getMaximoPerimetro());
+		System.out.println("Cantidad Sucesos Optimos = " + optimo.getContadorOptimo());
+		//for(Integer unDia : optimo.getDiasOcurridosOptimos()) { System.out.println(unDia);}
 	}
 }
