@@ -21,7 +21,7 @@ public class StrategyPeriodoSequia implements ICondicion{
 		this.sol = sol;
 		this.contadorSequias = 0;
 		this.valorCero = new BigDecimal(0);
-		this.limiteSuperiorSequia = new BigDecimal(10);
+		this.limiteSuperiorSequia = new BigDecimal(0);
 	}
 	
 	public SistemaSolar getSol() {	
@@ -66,7 +66,7 @@ public class StrategyPeriodoSequia implements ICondicion{
 
 		// Filtro La Lista De Planetas Para Que Al Comparar Con La Recta No Calcule El
 		// Del Planeta Que Utilice
-		List<Planeta> aux = sol.getPlanetas().stream().filter(planeta -> planeta.getClass() != unPlaneta.getClass())
+		List<Planeta> aux = sol.getPlanetas().stream().filter(planeta -> planeta.getNombrePlaneta() != unPlaneta.getNombrePlaneta())
 				.collect(Collectors.toList());
 
 		/**
@@ -87,8 +87,11 @@ public class StrategyPeriodoSequia implements ICondicion{
 
 	private BigDecimal calcularPendiente(Planeta unPlaneta) {
 
-		BigDecimal deltaX = (BigDecimal.valueOf(unPlaneta.getMovimientoEnX() - this.getSol().getCentroX())).setScale(4, RM);
-		BigDecimal deltaY = (BigDecimal.valueOf(unPlaneta.getMovimientoEnY() - this.getSol().getCentroY())).setScale(4, RM);
+		BigDecimal deltaX = unPlaneta.getMovimientoEnX().subtract(BigDecimal.valueOf(this.getSol().getCentroX())).setScale(4, RM);
+		BigDecimal deltaY = unPlaneta.getMovimientoEnY().subtract(BigDecimal.valueOf(this.getSol().getCentroY())).setScale(4, RM);
+		
+		if(deltaX.compareTo(valorCero) == 0) { return this.getValorCero(); }
+		
 		BigDecimal total = deltaY.divide(deltaX, 4, RM);
 		return total;
 	}
@@ -105,8 +108,8 @@ public class StrategyPeriodoSequia implements ICondicion{
 		BigDecimal centroCero = new BigDecimal(0);
 		BigDecimal exponente = BigDecimal.valueOf(1e-5);
 
-		BigDecimal ecuacionDerecha = pendiente.multiply(BigDecimal.valueOf(unPlaneta.getMovimientoEnX()).setScale(4, RM));
-		BigDecimal ecuacionIzquierda = BigDecimal.valueOf(unPlaneta.getMovimientoEnY());
+		BigDecimal ecuacionDerecha = pendiente.multiply(unPlaneta.getMovimientoEnX()).setScale(4, RM);
+		BigDecimal ecuacionIzquierda = unPlaneta.getMovimientoEnY();
 
 		BigDecimal ordenada = ecuacionIzquierda.subtract(ecuacionDerecha).setScale(4, RM);
 		BigDecimal resultado = ordenada.abs();
@@ -123,14 +126,14 @@ public class StrategyPeriodoSequia implements ICondicion{
 
 	private boolean compararPuntoConRecta(BigDecimal pendiente, BigDecimal ordenadaAlOrigen, Planeta unPlaneta, int dia) {
 
-		BigDecimal primerCalculo = pendiente.multiply(BigDecimal.valueOf(unPlaneta.getMovimientoEnX())).setScale(4, RM);
+		BigDecimal primerCalculo = pendiente.multiply(unPlaneta.getMovimientoEnX()).setScale(4, RM);
 
 		BigDecimal calculoX = primerCalculo.add(ordenadaAlOrigen).setScale(4, RM);
-		BigDecimal calculoY = BigDecimal.valueOf(unPlaneta.getMovimientoEnY()).setScale(4, RM);
+		BigDecimal calculoY = unPlaneta.getMovimientoEnY().setScale(4, RM);
 
 		BigDecimal resultado;
 
-		if (((calculoX.compareTo(this.getValorCero()) > 0) && (calculoY.compareTo(this.getValorCero()) > 1))
+		if (((calculoX.compareTo(this.getValorCero()) > 0) && (calculoY.compareTo(this.getValorCero()) > 0))
 				|| ((calculoX.compareTo(this.getValorCero()) < 0) && (calculoY.compareTo(this.getValorCero()) < 0))) {
 
 			BigDecimal absCalculoX = calculoX.abs();

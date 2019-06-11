@@ -9,15 +9,12 @@ public class SistemaSolar {
 	private int centroY;
 	private static SistemaSolar instanciaSistema;
 	private ArrayList<Planeta> planetas;
-	private int FPS;
 	private ICondicion estrategia;
 
 	private ArrayList<ICondicion> condicionesStrategy = new ArrayList<>();
 
 	private SistemaSolar() {
 		planetas = new ArrayList<>();
-		// Los FPS Son Para Los Intervalos De Tiempo Para La Trayectoria De Los Planetas
-		this.FPS = 30;
 		this.centroX = 0;
 		this.centroY = 0;
 	}
@@ -72,10 +69,6 @@ public class SistemaSolar {
 
 	public void setCentroY(int centroY) {
 		this.centroY = centroY;
-	}
-
-	public int getFPS() {
-		return FPS;
 	}
 	
 	public void aplicarCondiciones(ICondicion estrategia, int dia) {

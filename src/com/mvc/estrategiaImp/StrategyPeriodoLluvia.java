@@ -5,11 +5,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
-import com.mvc.Betasoide;
-import com.mvc.Ferengi;
 import com.mvc.Planeta;
 import com.mvc.SistemaSolar;
-import com.mvc.Vulcano;
 
 public class StrategyPeriodoLluvia implements ICondicion{
 
@@ -68,9 +65,9 @@ public class StrategyPeriodoLluvia implements ICondicion{
 		// Lado
 		ArrayList<BigDecimal> valoresOrientados = new ArrayList<>();
 
-		Ferengi planetaFerengi = (Ferengi) getSol().getPlanetas().get(0);
-		Betasoide planetaBetasoide = (Betasoide) getSol().getPlanetas().get(1);
-		Vulcano planetaVulcano = (Vulcano) getSol().getPlanetas().get(2);
+		Planeta planetaFerengi = getSol().getPlanetas().get(0);
+		Planeta planetaBetasoide = getSol().getPlanetas().get(1);
+		Planeta planetaVulcano = getSol().getPlanetas().get(2);
 
 		// Calculo La Orientacion De ABC
 		BigDecimal orientacionTriangulo = calculoOrientacion(planetaFerengi, planetaBetasoide, planetaVulcano);
@@ -113,17 +110,24 @@ public class StrategyPeriodoLluvia implements ICondicion{
 	private BigDecimal calcularPerimetroDelTriangulo(Planeta planetaA, Planeta planetaB, Planeta planetaC) {
 
 		BigDecimal total = BigDecimal.valueOf(0);
-
-		BigDecimal primerLado = BigDecimal.valueOf(Point2D.distance(planetaA.getMovimientoEnX(),
-				planetaA.getMovimientoEnY(), planetaB.getMovimientoEnX(), planetaB.getMovimientoEnY()));
+		
+		double planetaAX = planetaA.getMovimientoEnX().doubleValue();
+		double planetaAY = planetaA.getMovimientoEnY().doubleValue();
+		double planetaBX = planetaB.getMovimientoEnX().doubleValue();;
+		double planetaBY = planetaB.getMovimientoEnY().doubleValue();;
+		double planetaCX = planetaC.getMovimientoEnX().doubleValue();;
+		double planetaCY = planetaC.getMovimientoEnY().doubleValue();;
+		
+		BigDecimal primerLado = BigDecimal.valueOf(Point2D.distance(planetaAX,
+				planetaAY, planetaBX, planetaBY));
 		total = total.add(primerLado).setScale(4, RM);
 
-		BigDecimal segundoLado = BigDecimal.valueOf(Point2D.distance(planetaA.getMovimientoEnX(),
-				planetaA.getMovimientoEnY(), planetaC.getMovimientoEnX(), planetaC.getMovimientoEnY()));
+		BigDecimal segundoLado = BigDecimal.valueOf(Point2D.distance(planetaAX,
+				planetaAY, planetaCX, planetaCY));
 		total = total.add(segundoLado).setScale(4, RM);
 
-		BigDecimal tercerLado = BigDecimal.valueOf(Point2D.distance(planetaB.getMovimientoEnX(),
-				planetaB.getMovimientoEnY(), planetaC.getMovimientoEnX(), planetaC.getMovimientoEnY()));
+		BigDecimal tercerLado = BigDecimal.valueOf(Point2D.distance(planetaBX,
+				planetaBY, planetaCX, planetaCY));
 		return total.add(tercerLado).setScale(4, RM);
 
 	}
@@ -131,11 +135,11 @@ public class StrategyPeriodoLluvia implements ICondicion{
 	// Funcion Para Comprobar Si El Punto Respecto Al Triangulo Tienen La Misma
 	// Orientacion
 	private boolean tienenLaMismaOrientacion(BigDecimal primeraOrientacion, BigDecimal segundaOrientacion) {
-
+		
 		BigDecimal comparoCero = new BigDecimal(0);
-
-		return ((primeraOrientacion.compareTo(comparoCero) > 0) && (segundaOrientacion.compareTo(comparoCero) > 0))
-				|| ((primeraOrientacion.compareTo(comparoCero) > 0) && (segundaOrientacion.compareTo(comparoCero) > 0));
+		
+		return ((primeraOrientacion.compareTo(comparoCero) > 0) && (primeraOrientacion.compareTo(comparoCero) > 0))
+				|| ((segundaOrientacion.compareTo(comparoCero) > 0) && (segundaOrientacion.compareTo(comparoCero) > 0));
 	}
 
 	/**
@@ -145,14 +149,14 @@ public class StrategyPeriodoLluvia implements ICondicion{
 
 	private BigDecimal calculoOrientacion(Planeta planetaA, Planeta planetaB, Planeta planetaC) {
 
-		BigDecimal primero = (BigDecimal.valueOf(planetaA.getMovimientoEnX()))
-				.subtract(BigDecimal.valueOf(planetaC.getMovimientoEnX())).setScale(4, RM);
-		BigDecimal segundo = (BigDecimal.valueOf(planetaB.getMovimientoEnY()))
-				.subtract(BigDecimal.valueOf(planetaC.getMovimientoEnY())).setScale(4, RM);
-		BigDecimal tercero = (BigDecimal.valueOf(planetaA.getMovimientoEnY()))
-				.subtract(BigDecimal.valueOf(planetaC.getMovimientoEnY())).setScale(4, RM);
-		BigDecimal cuarto = (BigDecimal.valueOf(planetaB.getMovimientoEnX()))
-				.subtract(BigDecimal.valueOf(planetaC.getMovimientoEnX())).setScale(4, RM);
+		BigDecimal primero = planetaA.getMovimientoEnX()
+				.subtract(planetaC.getMovimientoEnX()).setScale(4, RM);
+		BigDecimal segundo = planetaB.getMovimientoEnY()
+				.subtract(planetaC.getMovimientoEnY()).setScale(4, RM);
+		BigDecimal tercero = (planetaA.getMovimientoEnY())
+				.subtract(planetaC.getMovimientoEnY()).setScale(4, RM);
+		BigDecimal cuarto = planetaB.getMovimientoEnX()
+				.subtract(planetaC.getMovimientoEnX()).setScale(4, RM);
 
 		BigDecimal primeraCuenta = primero.multiply(segundo).setScale(4, RM);
 		BigDecimal segundaCuenta = tercero.multiply(cuarto).setScale(4, RM);
@@ -168,13 +172,13 @@ public class StrategyPeriodoLluvia implements ICondicion{
 
 	private BigDecimal calculoOrientacion(Planeta planetaA, Planeta planetaB) {
 
-		BigDecimal primero = (BigDecimal.valueOf(planetaA.getMovimientoEnX())).subtract(BigDecimal.valueOf(getSol().getCentroX()))
+		BigDecimal primero = planetaA.getMovimientoEnX().subtract(BigDecimal.valueOf(getSol().getCentroX()))
 				.setScale(4, RM);
-		BigDecimal segundo = (BigDecimal.valueOf(planetaB.getMovimientoEnY())).subtract(BigDecimal.valueOf(getSol().getCentroY()))
+		BigDecimal segundo = planetaB.getMovimientoEnY().subtract(BigDecimal.valueOf(getSol().getCentroY()))
 				.setScale(4, RM);
-		BigDecimal tercero = (BigDecimal.valueOf(planetaA.getMovimientoEnY())).subtract(BigDecimal.valueOf(getSol().getCentroY()))
+		BigDecimal tercero = planetaA.getMovimientoEnY().subtract(BigDecimal.valueOf(getSol().getCentroY()))
 				.setScale(4, RM);
-		BigDecimal cuarto = (BigDecimal.valueOf(planetaB.getMovimientoEnX())).subtract(BigDecimal.valueOf(getSol().getCentroX()))
+		BigDecimal cuarto = planetaB.getMovimientoEnX().subtract(BigDecimal.valueOf(getSol().getCentroX()))
 				.setScale(4, RM);
 
 		BigDecimal primeraCuenta = primero.multiply(segundo).setScale(4, RM);

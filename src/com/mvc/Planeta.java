@@ -1,28 +1,43 @@
 package com.mvc;
 
-public abstract class Planeta {
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-	protected int radio;
-	protected SistemaSolar sol;
-	protected double É∆;
-	protected double movimientoEnX;
-	protected double movimientoEnY;
+public class Planeta {
 
-	public Planeta(int radio) {
-		this.radio = radio;
-		this.movimientoEnX = 0;
-		this.movimientoEnY = 0;
-		//Angulo Con El Cual Inicia Posicionado El Planeta
-		this.É∆ = Math.toDegrees(90);
+	private static RoundingMode RM = RoundingMode.HALF_EVEN;
+	private static double MAXGRADOS = 360;
+	private String nombrePlaneta;
+	private BigDecimal radio;
+	private double desplazamientoAngulo;
+	private SistemaSolar sol;
+	private double É∆;
+	private BigDecimal movimientoEnX;
+	private BigDecimal movimientoEnY;
+
+	public Planeta(String nombrePlaneta, double radio, double desplazamientoAngulo) {
+		this.nombrePlaneta = nombrePlaneta;
+		this.radio = BigDecimal.valueOf(radio);
+		this.desplazamientoAngulo = desplazamientoAngulo;
+		this.movimientoEnX = BigDecimal.valueOf(0);
+		this.movimientoEnY = BigDecimal.valueOf(0);
+		// Angulo Con El Cual Inicia Posicionado El Planeta
+		this.É∆ = 90;
 	}
-	
-	protected abstract void setMovimiento();
-	protected abstract void setTiempoMovimiento();
 
-	public void setAnguloInicial(int radio) {	
-		É∆ = Math.toDegrees(radio);
+	public void setMovimiento() {
+		setMovimientoEnX(trayectoriaEnX());
+		setMovimientoEnY(trayectoriaEnY());
 	}
-	
+
+	public void setTiempoMovimiento() {
+		this.desplazarAngulo();
+	}
+
+	public void setAnguloInicial(double angulo) {
+		É∆ = angulo;
+	}
+
 	public SistemaSolar getSol() {
 		return sol;
 	}
@@ -35,36 +50,67 @@ public abstract class Planeta {
 		return É∆;
 	}
 
-	//Desplazamiento Del Angulo Al Trasladarse
-	public void desplazarAngulo(double t) {
-		this.É∆ = 2 * Math.PI * t;
+	public String getNombrePlaneta() {
+		return nombrePlaneta;
 	}
 
-	public int getRadio() {
+	public void setNombrePlaneta(String nombrePlaneta) {
+		this.nombrePlaneta = nombrePlaneta;
+	}
+
+	public double getDesplazamientoAngulo() {
+		return desplazamientoAngulo;
+	}
+
+	public void setDesplazamientoAngulo(double desplazamientoAngulo) {
+		this.desplazamientoAngulo = desplazamientoAngulo;
+	}
+
+	public void setRadio(BigDecimal radio) {
+		this.radio = radio;
+	}
+
+	// Desplazamiento Del Angulo Al Trasladarse
+	public void desplazarAngulo() {
+		this.É∆ += this.getDesplazamientoAngulo();
+
+		if (getDesplazamientoAngulo() > 0)
+			this.É∆ = É∆ > 360 ? É∆ - MAXGRADOS : É∆;
+		else
+			this.É∆ = É∆ <= 0 ? MAXGRADOS - É∆ : É∆;
+	}
+
+	public BigDecimal getRadio() {
 		return radio;
 	}
-	
-	public double getMovimientoEnX() {
+
+	public BigDecimal getMovimientoEnX() {
 		return movimientoEnX;
 	}
 
-	public void setMovimientoEnX(double valorX) {
+	public void setMovimientoEnX(BigDecimal valorX) {
 		this.movimientoEnX = valorX;
 	}
 
-	public double getMovimientoEnY() {
+	public BigDecimal getMovimientoEnY() {
 		return movimientoEnY;
 	}
 
-	public void setMovimientoEnY(double valorY) {
+	public void setMovimientoEnY(BigDecimal valorY) {
 		this.movimientoEnY = valorY;
 	}
-	
-	public double trayectoriaEnY() {
-		return getRadio() * Math.sin(getAnguloInicial()) + getSol().getCentroY();
+
+	public BigDecimal trayectoriaEnY() {
+
+		BigDecimal anguloSin = BigDecimal.valueOf(Math.sin(Math.toRadians(getAnguloInicial())));
+
+		return getRadio().multiply(anguloSin).setScale(4, RM);
 	}
-	
-	public double trayectoriaEnX() {	
-			return getRadio() * Math.cos(getAnguloInicial()) + getSol().getCentroX();
+
+	public BigDecimal trayectoriaEnX() {
+
+		BigDecimal anguloCos = BigDecimal.valueOf(Math.cos(Math.toRadians(getAnguloInicial())));
+
+		return getRadio().multiply(anguloCos).setScale(4, RM);
 	}
 }

@@ -13,9 +13,9 @@ public class Demos {
 		//Instancio Sistema Solar
 		SistemaSolar sol = SistemaSolar.getInstanceSistemaSolar();
 		//Instancio Planetas
-		Ferengi ferengi = new Ferengi();
-		Betasoide beta = new Betasoide();
-		Vulcano vulcano = new Vulcano();
+		Planeta ferengi = new Planeta("Ferengi" ,500 ,1);
+		Planeta beta = new Planeta("Betasoide" ,1000 ,3);
+		Planeta vulcano = new Planeta("Vulcano" ,2000 ,-5);
 		//Instancio Estrategias
 		StrategyPeriodoSequia sequia = new StrategyPeriodoSequia(sol);
 		StrategyPeriodoLluvia lluvia = new StrategyPeriodoLluvia(sol);
@@ -39,18 +39,13 @@ public class Demos {
 			//Aplico Algoritmos Dentro De La Lista Que Tiene El Sol
 
 			sol.getCondicionesStrategy().stream().forEach(estrategia -> sol.aplicarCondiciones(estrategia, dias));
-	
-			try {
-				Thread.sleep(1000 / sol.getFPS());
-			} catch (Exception e) {
-			}
 		}
 		
 		System.out.println("Cantidad Sucesos Sequias = " + sequia.getContadorSequias());
-		//for(Integer unDia : sequia.getDiasOcurridosSequias()) { System.out.println(unDia);}
+		for(Integer unDia : sequia.getDiasOcurridosSequias()) { System.out.println(unDia);}
 		System.out.println("Cantidad Sucesos Lluvias = " + lluvia.getContadorLluvias());
 		System.out.println("Dia = " + lluvia.getMaximoDia() + " - Perimetro = " + lluvia.getMaximoPerimetro());
 		System.out.println("Cantidad Sucesos Optimos = " + optimo.getContadorOptimo());
-		//for(Integer unDia : optimo.getDiasOcurridosOptimos()) { System.out.println(unDia);}
+		for(Integer unDia : optimo.getDiasOcurridosOptimos()) { System.out.println(unDia);}
 	}
 }
