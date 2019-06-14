@@ -1,20 +1,21 @@
-package com.mvc.estrategiaImp;
+package com.galaxia.sistemasolar.PrediccionClima.estrategiaImp;
 
 import java.awt.geom.Point2D;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
-import com.mvc.Planeta;
-import com.mvc.SistemaSolar;
+import com.galaxia.sistemasolar.PrediccionClima.Planeta;
+import com.galaxia.sistemasolar.PrediccionClima.SistemaSolar;
 
 public class StrategyPeriodoLluvia implements ICondicion{
 
 	private SistemaSolar sol;
 	private static RoundingMode RM = RoundingMode.HALF_EVEN;
 	private int contadorLluvias;
+	private boolean condicionCumplida;
 	private BigDecimal maximoPerimetro;
-	private int maximoDia;
+	private long maximoDia;
 	
 	public StrategyPeriodoLluvia(SistemaSolar sol) {	
 		this.sol = sol;
@@ -29,6 +30,14 @@ public class StrategyPeriodoLluvia implements ICondicion{
 		return this.sol;
 	}
 	
+	public boolean isCondicionCumplida() {
+		return condicionCumplida;
+	}
+
+	public void setCondicionCumplida(boolean condicionCumplida) {
+		this.condicionCumplida = condicionCumplida;
+	}
+
 	public void aumentarContadorLluvias() {
 		this.contadorLluvias++;
 	}
@@ -37,12 +46,12 @@ public class StrategyPeriodoLluvia implements ICondicion{
 		return maximoPerimetro;
 	}
 
-	public int getMaximoDia() {
+	public long getMaximoDia() {
 		return maximoDia;
 	}
 
-	public void setMaximoDia(int maximoDia) {
-		this.maximoDia = maximoDia;
+	public void setMaximoDia(long diaSuceso) {
+		this.maximoDia = diaSuceso;
 	}
 
 	public void setMaximoPerimetro(BigDecimal maximoPerimetro) {
@@ -53,13 +62,13 @@ public class StrategyPeriodoLluvia implements ICondicion{
 		return contadorLluvias;
 	}
 	
-	public void sucesoPeriodo(int diaSuceso) {		
-		sucesoPeriodoDeLluvia(diaSuceso);	
+	public boolean sucesoPeriodo(long diaSuceso) {		
+		return sucesoPeriodoDeLluvia(diaSuceso);	
 	}
 	
 	// Algoritmo Para Calcular La Triangulacion Teniendo Dentro El
 	// Sol------------------------------------------------------
-	public void sucesoPeriodoDeLluvia(int diaSuceso) {
+	public boolean sucesoPeriodoDeLluvia(long diaSuceso) {
 
 		// Esta Lista Es Para Los Valores De Segmento Entre Planetas Redondeado Ya Su
 		// Lado
@@ -87,8 +96,9 @@ public class StrategyPeriodoLluvia implements ICondicion{
 		 * Sucede El De Lluvia Si Uno No Cumple La Condicion El Resto No Lo Comprueba Y
 		 * Significa Que El Punto Esta Fuera Del Triangulo
 		 */
-
-		if (valoresOrientados.stream().allMatch(valor -> tienenLaMismaOrientacion(orientacionTriangulo, valor))) {
+		boolean resultadoCondicion = valoresOrientados.stream().allMatch(valor -> tienenLaMismaOrientacion(orientacionTriangulo, valor));
+		
+		if (resultadoCondicion) {
 			this.aumentarContadorLluvias();
 			BigDecimal perimetroTriangulo = calcularPerimetroDelTriangulo(planetaFerengi, planetaBetasoide,
 					planetaVulcano);
@@ -100,6 +110,7 @@ public class StrategyPeriodoLluvia implements ICondicion{
 				this.setMaximoDia(diaSuceso);
 			}
 		}
+		return resultadoCondicion;
 	}
 	
 	/**

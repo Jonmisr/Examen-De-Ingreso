@@ -1,21 +1,22 @@
-package com.mvc.estrategiaImp;
+package com.galaxia.sistemasolar.PrediccionClima.estrategiaImp;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.mvc.Planeta;
-import com.mvc.SistemaSolar;
+import com.galaxia.sistemasolar.PrediccionClima.Planeta;
+import com.galaxia.sistemasolar.PrediccionClima.SistemaSolar;
 
 public class StrategyPeriodoSequia implements ICondicion{
 
 	private static RoundingMode RM = RoundingMode.HALF_EVEN;
 	private SistemaSolar sol;
 	private int contadorSequias;
+	private boolean condicionCumplida;
 	private BigDecimal valorCero;
 	private BigDecimal limiteSuperiorSequia;
-	private ArrayList<Integer> diasCumplidosSequias = new ArrayList<>();
+	private ArrayList<Long> diasCumplidosSequias = new ArrayList<>();
 	
 	public StrategyPeriodoSequia(SistemaSolar sol) {
 		this.sol = sol;
@@ -28,11 +29,19 @@ public class StrategyPeriodoSequia implements ICondicion{
 		return this.sol;
 	}
 	
-	public ArrayList<Integer> getDiasOcurridosSequias() {
+	public ArrayList<Long> getDiasOcurridosSequias() {
 
 		return diasCumplidosSequias;
 	}
 	
+	public boolean isCondicionCumplida() {
+		return condicionCumplida;
+	}
+
+	public void setCondicionCumplida(boolean condicionCumplida) {
+		this.condicionCumplida = condicionCumplida;
+	}
+
 	public BigDecimal getValorCero() {
 		return valorCero;
 	}
@@ -49,15 +58,15 @@ public class StrategyPeriodoSequia implements ICondicion{
 		this.contadorSequias++;
 	}
 	
-	public void sucesoPeriodo(int diaSuceso) {
+	public boolean sucesoPeriodo(long diaSuceso) {
 		
-		sucesoPeriodoDeSequia(diaSuceso);
+		return sucesoPeriodoDeSequia(diaSuceso);
 	}
 	
 	// Algoritmo Para Calcular La Alineacion Total En El
 	// Sistema------------------------------------------------------
 
-	public void sucesoPeriodoDeSequia(int dia) {
+	public boolean sucesoPeriodoDeSequia(long dia) {
 
 		Planeta unPlaneta = sol.getPlanetas().get(2);
 
@@ -74,10 +83,14 @@ public class StrategyPeriodoSequia implements ICondicion{
 		 * Deberia Suceder La Sequia Si Uno No Cumple La Condicion El Resto No Lo
 		 * Comprueba
 		 */
-		if (aux.stream().allMatch(planeta -> compararPuntoConRecta(pendiente, ordenadaAlOrigen, planeta, dia))) {
+		boolean resultadoCondicion = aux.stream().allMatch(planeta -> compararPuntoConRecta(pendiente, ordenadaAlOrigen, planeta, dia));
+		
+		if (resultadoCondicion) {
 			getDiasOcurridosSequias().add(dia);
 			this.aumentarContadorSequias();
 		}
+		
+		return resultadoCondicion;
 	}
 
 //	 /**Esta Funcion Lo Que Hace Es Calcular La Diferencia Entre 2 Puntos Y Obtener
@@ -124,7 +137,7 @@ public class StrategyPeriodoSequia implements ICondicion{
 	 * A La Recta
 	 */
 
-	private boolean compararPuntoConRecta(BigDecimal pendiente, BigDecimal ordenadaAlOrigen, Planeta unPlaneta, int dia) {
+	private boolean compararPuntoConRecta(BigDecimal pendiente, BigDecimal ordenadaAlOrigen, Planeta unPlaneta, long dia) {
 
 		BigDecimal primerCalculo = pendiente.multiply(unPlaneta.getMovimientoEnX()).setScale(4, RM);
 

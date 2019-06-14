@@ -1,7 +1,7 @@
-package com.mvc;
+package com.galaxia.sistemasolar.PrediccionClima;
 
 import java.util.ArrayList;
-import com.mvc.estrategiaImp.ICondicion;
+import com.galaxia.sistemasolar.PrediccionClima.estrategiaImp.ICondicion;
 
 public class SistemaSolar {
 
@@ -37,7 +37,7 @@ public class SistemaSolar {
 	public void setConcreteStrategy(ICondicion concreteStrategy) {
 		this.estrategia = concreteStrategy;
 	}
-	
+
 	public ICondicion getConcreteStrategy() {
 		return estrategia;
 	}
@@ -71,8 +71,8 @@ public class SistemaSolar {
 		this.centroY = centroY;
 	}
 	
-	public void aplicarCondiciones(ICondicion estrategia, int dia) {
+	public boolean aplicarCondiciones(ICondicion estrategia, long dias) {
 		this.setConcreteStrategy(estrategia);
-		this.getConcreteStrategy().sucesoPeriodo(dia);
+		return this.getConcreteStrategy().sucesoPeriodo(dias);
 	}
 }

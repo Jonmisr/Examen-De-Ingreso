@@ -1,20 +1,21 @@
-package com.mvc.estrategiaImp;
+package com.galaxia.sistemasolar.PrediccionClima.estrategiaImp;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
-import com.mvc.Planeta;
-import com.mvc.SistemaSolar;
+import com.galaxia.sistemasolar.PrediccionClima.Planeta;
+import com.galaxia.sistemasolar.PrediccionClima.SistemaSolar;
 
 public class StrategyPeriodoOptimo implements ICondicion{
 
 	private static RoundingMode RM = RoundingMode.HALF_EVEN;
 	private SistemaSolar sol;
 	private int contadorOptimo;
+	private boolean condicionCumplida;
 	private BigDecimal valorCero;
 	private BigDecimal limiteSuperiorOptimo;
-	private ArrayList<Integer> diasCumplidosOptimos = new ArrayList<>();
+	private ArrayList<Long> diasCumplidosOptimos = new ArrayList<>();
 	
 	public StrategyPeriodoOptimo(SistemaSolar sol) {
 		
@@ -28,11 +29,19 @@ public class StrategyPeriodoOptimo implements ICondicion{
 		return this.sol;
 	}
 	
-	public ArrayList<Integer> getDiasOcurridosOptimos() {
+	public ArrayList<Long> getDiasOcurridosOptimos() {
 
 		return diasCumplidosOptimos;
 	}
 	
+	public boolean isCondicionCumplida() {
+		return condicionCumplida;
+	}
+
+	public void setCondicionCumplida(boolean condicionCumplida) {
+		this.condicionCumplida = condicionCumplida;
+	}
+
 	public void aumentarContadorOptimo() {
 		this.contadorOptimo++;
 	}
@@ -49,14 +58,14 @@ public class StrategyPeriodoOptimo implements ICondicion{
 		return limiteSuperiorOptimo;
 	}
 
-	public void sucesoPeriodo(int diaSuceso) {
-		sucesoPeriodoOptimo(diaSuceso);
+	public boolean sucesoPeriodo(long diaSuceso) {
+		return sucesoPeriodoOptimo(diaSuceso);
 	} 
 	
 	// Algoritmo Para Calcular La Alineacion Solo Entre
 	// Planetas------------------------------------------------------
 
-	public void sucesoPeriodoOptimo(int dia) {
+	public boolean sucesoPeriodoOptimo(long dia) {
 
 		Planeta planetaFerengi = getSol().getPlanetas().get(0);
 		Planeta planetaBetasoide = getSol().getPlanetas().get(1);
@@ -75,10 +84,14 @@ public class StrategyPeriodoOptimo implements ICondicion{
 		 * Temperatura
 		 */
 
-		if (primeraCondicion && segundaCondicion) {
+		boolean resultadoCondicion = (primeraCondicion && segundaCondicion);
+		
+		if (resultadoCondicion) {
 			this.aumentarContadorOptimo();
 			getDiasOcurridosOptimos().add(dia);
 		}
+		
+		return resultadoCondicion;
 	}
 
 	// Calculo El Segmento BA Entre Dos Planetas Para Obtener La Recta
@@ -105,7 +118,7 @@ public class StrategyPeriodoOptimo implements ICondicion{
 	 * (B.y - A.y) / y
 	 */
 
-	public boolean compararPuntosConLaRecta(Planeta planetaA, Planeta planetaB, BigDecimal puntoX, BigDecimal puntoY, int dia) {
+	public boolean compararPuntosConLaRecta(Planeta planetaA, Planeta planetaB, BigDecimal puntoX, BigDecimal puntoY, long dia) {
 
 		BigDecimal resultado;
 		
@@ -146,7 +159,7 @@ public class StrategyPeriodoOptimo implements ICondicion{
 	 * Encuentra En La Recta
 	 */
 
-	public boolean compararPuntosConLaRecta(Planeta planetaA, BigDecimal puntoX, BigDecimal puntoY, int dia) {
+	public boolean compararPuntosConLaRecta(Planeta planetaA, BigDecimal puntoX, BigDecimal puntoY, long dia) {
 
 		BigDecimal resultado;
 		BigDecimal operandoNegativo = BigDecimal.valueOf(-1);

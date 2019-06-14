@@ -1,4 +1,4 @@
-package com.mvc;
+package com.galaxia.sistemasolar.PrediccionClima;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,7 +11,7 @@ public class Planeta {
 	private BigDecimal radio;
 	private double desplazamientoAngulo;
 	private SistemaSolar sol;
-	private double É∆;
+	private double angulo;
 	private BigDecimal movimientoEnX;
 	private BigDecimal movimientoEnY;
 
@@ -22,7 +22,7 @@ public class Planeta {
 		this.movimientoEnX = BigDecimal.valueOf(0);
 		this.movimientoEnY = BigDecimal.valueOf(0);
 		// Angulo Con El Cual Inicia Posicionado El Planeta
-		this.É∆ = 90;
+		this.angulo = 90;
 	}
 
 	public void setMovimiento() {
@@ -35,7 +35,7 @@ public class Planeta {
 	}
 
 	public void setAnguloInicial(double angulo) {
-		É∆ = angulo;
+		this.angulo = angulo;
 	}
 
 	public SistemaSolar getSol() {
@@ -47,7 +47,7 @@ public class Planeta {
 	}
 
 	public double getAnguloInicial() {
-		return É∆;
+		return angulo;
 	}
 
 	public String getNombrePlaneta() {
@@ -72,12 +72,12 @@ public class Planeta {
 
 	// Desplazamiento Del Angulo Al Trasladarse
 	public void desplazarAngulo() {
-		this.É∆ += this.getDesplazamientoAngulo();
+		this.angulo += this.getDesplazamientoAngulo();
 
 		if (getDesplazamientoAngulo() > 0)
-			this.É∆ = É∆ > 360 ? É∆ - MAXGRADOS : É∆;
+			this.angulo = angulo > 360 ? angulo - MAXGRADOS : angulo;
 		else
-			this.É∆ = É∆ <= 0 ? MAXGRADOS - É∆ : É∆;
+			this.angulo = angulo <= 0 ? MAXGRADOS - angulo : angulo;
 	}
 
 	public BigDecimal getRadio() {
