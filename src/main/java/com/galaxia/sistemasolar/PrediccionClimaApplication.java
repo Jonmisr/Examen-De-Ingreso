@@ -1,4 +1,4 @@
-package com.galaxia.sistemasolar.PrediccionClima;
+package com.galaxia.sistemasolar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,9 +8,5 @@ public class PrediccionClimaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PrediccionClimaApplication.class, args);
-		
-		Demos demostracion = new Demos();
-		demostracion.prediccionProgramaInformatico();
 	}
-
 }

@@ -22,7 +22,7 @@ public class StrategyPeriodoOptimo implements ICondicion{
 		this.sol = sol;
 		this.contadorOptimo = 0;
 		this.valorCero = BigDecimal.valueOf(0);
-		this.limiteSuperiorOptimo = BigDecimal.valueOf(0.045);
+		this.limiteSuperiorOptimo = BigDecimal.valueOf(0.1225);
 	}
 	
 	public SistemaSolar getSol() {	

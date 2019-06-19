@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.galaxia.sistemasolar.PrediccionClima.models.Clima;
+import com.galaxia.sistemasolar.PrediccionClima.Demos;
 import com.galaxia.sistemasolar.PrediccionClima.repository.ClimaRepository;
+import com.galaxia.sistemasolar.models.Clima;
 
 @RestController
-@RequestMapping("predicciones/clima")
+@RequestMapping("prediccion/climas")
 public class ClimaController {
-
+	
 	@Autowired
 	private ClimaRepository CR;
 
@@ -28,15 +29,14 @@ public class ClimaController {
 		return CR.findAll();
 	}
 
-	@PostMapping
+	@PostMapping("/ejecutarSistema")
 	@ResponseStatus(HttpStatus.OK)
-	public void create(String condicionClimatica) {
-				
-		Clima unClima = new Clima(condicionClimatica);
-		CR.save(unClima);
+	public void create() {
+		Demos demostracion = new Demos();
+		demostracion.prediccionProgramaInformatico(CR);
 	}
 	
-	@GetMapping("?dia={dia}")
+	@GetMapping("/dia={dia}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clima get(@PathVariable ("dia") long dia) {	
 		

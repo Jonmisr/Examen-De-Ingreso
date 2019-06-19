@@ -1,16 +1,18 @@
 package com.galaxia.sistemasolar.PrediccionClima;
 
 import java.util.Optional;
-
-import com.galaxia.sistemasolar.PrediccionClima.controller.ClimaController;
+import org.springframework.context.annotation.Configuration;
 import com.galaxia.sistemasolar.PrediccionClima.estrategiaImp.ICondicion;
 import com.galaxia.sistemasolar.PrediccionClima.estrategiaImp.StrategyPeriodoLluvia;
 import com.galaxia.sistemasolar.PrediccionClima.estrategiaImp.StrategyPeriodoOptimo;
 import com.galaxia.sistemasolar.PrediccionClima.estrategiaImp.StrategyPeriodoSequia;
+import com.galaxia.sistemasolar.PrediccionClima.repository.ClimaRepository;
+import com.galaxia.sistemasolar.models.Clima;
 
+@Configuration
 public class Demos {
 
-	public void prediccionProgramaInformatico() {
+	public void prediccionProgramaInformatico(ClimaRepository climaRepositorio) {
 		
 		int totalDiasAnio = 365;
 		int anios = 10;
@@ -46,36 +48,40 @@ public class Demos {
 					.filter(estrategia -> sol.aplicarCondiciones(estrategia, dias))
 					.findAny();
 											
-			this.climaEstablecido(condicionCumplida);
+			Clima unClima = this.climaEstablecido(condicionCumplida);	
+			climaRepositorio.save(unClima);
 		}
 		
-		System.out.println("Cantidad Sucesos Sequias = " + sequia.getContadorSequias());
-		for(Long unDia : sequia.getDiasOcurridosSequias()) { System.out.println(unDia);}
-		System.out.println("Cantidad Sucesos Lluvias = " + lluvia.getContadorLluvias());
-		System.out.println("Dia = " + lluvia.getMaximoDia() + " - Perimetro = " + lluvia.getMaximoPerimetro());
-		System.out.println("Cantidad Sucesos Optimos = " + optimo.getContadorOptimo());
-		for(Long unDia : optimo.getDiasOcurridosOptimos()) { System.out.println(unDia);}
+//		System.out.println("Cantidad Sucesos Sequias = " + sequia.getContadorSequias());
+//		for(Long unDia : sequia.getDiasOcurridosSequias()) { System.out.println(unDia);}
+//		System.out.println("Cantidad Sucesos Lluvias = " + lluvia.getContadorLluvias());
+//		System.out.println("Dia = " + lluvia.getMaximoDia() + " - Perimetro = " + lluvia.getMaximoPerimetro());
+//		for(Long unDia : lluvia.getDiasCumplidosLluvia()) { System.out.println(unDia);}
+//		System.out.println("Cantidad Sucesos Optimos = " + optimo.getContadorOptimo());
+//		for(Long unDia : optimo.getDiasOcurridosOptimos()) { System.out.println(unDia);}
+
 	}
 	
-	public void climaEstablecido(Optional<ICondicion> condicionCumplida) {
+	public Clima climaEstablecido(Optional<ICondicion> condicionCumplida) {
 
-		ClimaController controladorCondicion = new ClimaController();
-
+		Clima unClima = new Clima();
+		
 		if (condicionCumplida.isPresent()) {
-
+			
 			if (condicionCumplida.get().getClass().equals(StrategyPeriodoLluvia.class)) {
-				controladorCondicion.create("lluvia");
+				unClima.setClima("lluvia");
 			}
 
-			else if (condicionCumplida.get().getClass().equals(StrategyPeriodoSequia.class)) {
-				controladorCondicion.create("sequia");
+			else if (condicionCumplida.get().getClass().equals(StrategyPeriodoSequia.class)) {		
+				unClima.setClima("sequia");
 			}
 
 			else if (condicionCumplida.get().getClass().equals(StrategyPeriodoOptimo.class)) {
-				controladorCondicion.create("optimo");
+				unClima.setClima("optimo");
 			}
 		} else {
-			controladorCondicion.create(" ");
+			unClima.setClima(null);
 		}
+		return unClima;
 	}
 }

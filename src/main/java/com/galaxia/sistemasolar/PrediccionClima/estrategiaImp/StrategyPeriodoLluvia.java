@@ -16,6 +16,7 @@ public class StrategyPeriodoLluvia implements ICondicion{
 	private boolean condicionCumplida;
 	private BigDecimal maximoPerimetro;
 	private long maximoDia;
+	private ArrayList<Long> diasCumplidosLluvia = new ArrayList<>();
 	
 	public StrategyPeriodoLluvia(SistemaSolar sol) {	
 		this.sol = sol;
@@ -32,6 +33,10 @@ public class StrategyPeriodoLluvia implements ICondicion{
 	
 	public boolean isCondicionCumplida() {
 		return condicionCumplida;
+	}
+	
+	public ArrayList<Long> getDiasCumplidosLluvia() {
+		return diasCumplidosLluvia;
 	}
 
 	public void setCondicionCumplida(boolean condicionCumplida) {
@@ -100,6 +105,7 @@ public class StrategyPeriodoLluvia implements ICondicion{
 		
 		if (resultadoCondicion) {
 			this.aumentarContadorLluvias();
+			diasCumplidosLluvia.add(diaSuceso);
 			BigDecimal perimetroTriangulo = calcularPerimetroDelTriangulo(planetaFerengi, planetaBetasoide,
 					planetaVulcano);
 
@@ -107,7 +113,7 @@ public class StrategyPeriodoLluvia implements ICondicion{
 			 || perimetroTriangulo.compareTo(this.getMaximoPerimetro()) == 0) {
 				//System.out.println("Dia: " + diaSuceso + " Nuevo Perimetro Maximo = " + perimetroTriangulo);
 				this.setMaximoPerimetro(perimetroTriangulo);
-				this.setMaximoDia(diaSuceso);
+				this.setMaximoDia(diaSuceso);			
 			}
 		}
 		return resultadoCondicion;

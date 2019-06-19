@@ -1,11 +1,9 @@
-package com.galaxia.sistemasolar.PrediccionClima.models;
+package com.galaxia.sistemasolar.models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -18,10 +16,6 @@ public class Clima {
 	private Long dia;
 	
 	private String clima;
-
-	public Clima(String clima) {
-		this.clima = clima;
-	}
 	
 	public Long getDia() {
 		return dia;
